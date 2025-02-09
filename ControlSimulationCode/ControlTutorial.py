@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
@@ -39,7 +37,7 @@ def simulate_dc_motor():
     Runs a numeric simulation of the DC motor equations (zero load)
     and then plots the armature current and speed.
     """
-    # --- Example motor parameters ---
+    # --- Example motor parameters --- Can change these values 
     Va = 24.0    # Armature voltage
     Ra = 2.0     # Armature resistance
     La = 0.5     # Armature inductance
@@ -80,7 +78,7 @@ def simulate_dc_motor():
     plt.tight_layout()
     plt.show()
 
-def draw_simulink_like_schematic():
+def draw_simulink_schematic():
     """
     Draws a Python approximation of the Simulink DC motor schematic:
       - DC Machine block with A+, A-, F+, F-, T_L, speed output
@@ -213,12 +211,12 @@ def draw_simulink_like_schematic():
     ax.text(pg_x + pg_w/2, pg_y + pg_h/2,
             "powergui\n(discrete)", ha='center', va='center', fontsize=8)
 
-    plt.title("Simulink-Like DC Motor Model (Drawn in Python)", fontsize=12)
+    plt.title("DC Motor Model (Drawn in Python)", fontsize=12)
     plt.show()
 
 def main():
     # 1) Draw the approximate schematic
-    draw_simulink_like_schematic()
+    draw_simulink_schematic()
 
     # 2) Simulate the DC motor and plot results
     simulate_dc_motor()
