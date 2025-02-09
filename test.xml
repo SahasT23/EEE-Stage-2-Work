@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxGraphModel dx="1382" dy="841" grid="1" gridSize="10" guides="1" tooltips="1"
+  connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827"
+  pageHeight="1169" math="0" shadow="0">
+  <root>
+    <!-- Root layer -->
+    <mxCell id="0"/>
+    <!-- Default parent -->
+    <mxCell id="1" parent="0"/>
+    
+    <!-- powergui block -->
+    <mxCell id="powergui" value="Discrete 2e-05 s" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;strokeColor=#000000;fillColor=#ffffff"
+            vertex="1" parent="1">
+      <mxGeometry x="320" y="30" width="120" height="40" as="geometry"/>
+    </mxCell>
+    
+    <!-- Constant block labeled '0' -->
+    <mxCell id="constant0" value="0" style="shape=rectangle;whiteSpace=wrap;rounded=1;html=1;align=center;verticalAlign=middle;strokeColor=#000000;fillColor=#ffffff"
+            vertex="1" parent="1">
+      <mxGeometry x="80" y="100" width="40" height="40" as="geometry"/>
+    </mxCell>
+    
+    <!-- DC Machine block -->
+    <mxCell id="dcMachine" value="DC Machine (A+, A−, F+, F−, TL, m…)"
+            style="shape=rectangle;whiteSpace=wrap;rounded=1;html=1;align=center;verticalAlign=middle;strokeColor=#000000;fillColor=#ffffff"
+            vertex="1" parent="1">
+      <mxGeometry x="200" y="80" width="160" height="100" as="geometry"/>
+    </mxCell>
+    
+    <!-- Battery for Armature -->
+    <mxCell id="batteryA" value="Battery (Armature)"
+            style="shape=mxgraph.electrical.misc.battery_1;direction=north;verticalLabelPosition=bottom;align=center;verticalAlign=top"
+            vertex="1" parent="1">
+      <mxGeometry x="60" y="240" width="60" height="80" as="geometry"/>
+    </mxCell>
+    
+    <!-- Battery for Field -->
+    <mxCell id="batteryF" value="Battery (Field)"
+            style="shape=mxgraph.electrical.misc.battery_1;direction=north;verticalLabelPosition=bottom;align=center;verticalAlign=top"
+            vertex="1" parent="1">
+      <mxGeometry x="140" y="240" width="60" height="80" as="geometry"/>
+    </mxCell>
+    
+    <!-- Scope block -->
+    <mxCell id="scope" value="Scope" style="shape=rectangle;whiteSpace=wrap;rounded=1;html=1;align=center;verticalAlign=middle;strokeColor=#000000;fillColor=#ffffff"
+            vertex="1" parent="1">
+      <mxGeometry x="420" y="90" width="60" height="40" as="geometry"/>
+    </mxCell>
+    
+    <!-- Gain (negative) block -->
+    <mxCell id="gain" value="Gain (−)" style="shape=triangle;direction=west;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;strokeColor=#000000;fillColor=#ffffff"
+            vertex="1" parent="1">
+      <mxGeometry x="500" y="90" width="40" height="40" as="geometry"/>
+    </mxCell>
+    
+    <!-- Edge from Constant(0) to DC Machine (Torque input TL) -->
+    <mxCell id="edge0toDC" edge="1" parent="1"
+            style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#000000;labelBackgroundColor=#ffffff;">
+      <mxGeometry relative="1" as="geometry"/>
+      <mxCell source="constant0" target="dcMachine"/>
+    </mxCell>
+    
+    <!-- Edge from DC Machine to Scope (Speed output) -->
+    <mxCell id="edgeDCtoScope" edge="1" parent="1"
+            style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#000000;labelBackgroundColor=#ffffff;">
+      <mxGeometry relative="1" as="geometry"/>
+      <mxCell source="dcMachine" target="scope"/>
+    </mxCell>
+    
+    <!-- Edge from Scope to Gain -->
+    <mxCell id="edgeScopeToGain" edge="1" parent="1"
+            style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#000000;labelBackgroundColor=#ffffff;">
+      <mxGeometry relative="1" as="geometry"/>
+      <mxCell source="scope" target="gain"/>
+    </mxCell>
+    
+    <!-- Edge from Battery(Armature) to DC Machine (A+ / A−) -->
+    <mxCell id="edgeBatteryA" edge="1" parent="1"
+            style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#000000;">
+      <mxGeometry relative="1" as="geometry"/>
+      <mxCell source="batteryA" target="dcMachine"/>
+    </mxCell>
+    
+    <!-- Edge from Battery(Field) to DC Machine (F+ / F−) -->
+    <mxCell id="edgeBatteryF" edge="1" parent="1"
+            style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#000000;">
+      <mxGeometry relative="1" as="geometry"/>
+      <mxCell source="batteryF" target="dcMachine"/>
+    </mxCell>
+    
+  </root>
+</mxGraphModel>
