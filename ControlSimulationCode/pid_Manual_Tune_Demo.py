@@ -31,14 +31,9 @@ def simulate_pid(kp, ki, kd, a, b, setpoint, y0=0.0, t_final=5.0, dt=0.01):
         error = setpoint - y
 
         # PID terms:
-        #  Proportional
         P = kp * error
-
-        #  Integral (simple numerical accumulation)
         integral += error * dt
         I = ki * integral
-
-        #  Derivative (discrete approximation)
         derivative = (error - error_prev) / dt
         D = kd * derivative
 
@@ -53,7 +48,7 @@ def simulate_pid(kp, ki, kd, a, b, setpoint, y0=0.0, t_final=5.0, dt=0.01):
         y_array.append(y)
         u_array.append(u)
 
-        # For next loop
+        # For next iteration
         error_prev = error
 
     return t, np.array(y_array), np.array(u_array)
@@ -62,6 +57,7 @@ def main():
     """
     Demonstrates a manual PID tuning approach by running multiple simulations
     with different (Kp, Ki, Kd) sets to show how the response changes step by step.
+    Now each run is plotted in its own figure.
     """
 
     # Plant parameters for 1st-order system
@@ -72,20 +68,11 @@ def main():
     setpoint = 5.0
 
     # We'll do a few different runs to illustrate a typical manual tuning sequence.
-
-    # 1) Very small Kp, no I, no D (system likely responds slowly)
     gains_run1 = (0.5, 0.0, 0.0)
-    
-    # 2) Bigger Kp, no I, no D (system responds faster, might start overshooting)
     gains_run2 = (2.0, 0.0, 0.0)
-
-    # 3) Add some Integral action to remove steady-state error
     gains_run3 = (2.0, 1.0, 0.0)
-
-    # 4) Add a small Derivative to help damp oscillations
     gains_run4 = (2.0, 1.0, 0.5)
 
-    # We'll store all these runs in a list to loop through
     runs = [
         {"label": "Run1: Kp=0.5, Ki=0,   Kd=0",   "gains": gains_run1},
         {"label": "Run2: Kp=2.0, Ki=0,   Kd=0",   "gains": gains_run2},
@@ -93,13 +80,11 @@ def main():
         {"label": "Run4: Kp=2.0, Ki=1.0, Kd=0.5", "gains": gains_run4},
     ]
 
-    # We'll simulate each run for the same time window
     t_final = 5.0
     dt = 0.01
 
-    plt.figure(figsize=(10, 6))
-    for i, run in enumerate(runs, start=1):
-        # Unpack the gains
+    # Run each simulation and plot separately
+    for run in runs:
         kp, ki, kd = run["gains"]
         label = run["label"]
 
@@ -108,31 +93,27 @@ def main():
                                          a=a, b=b, setpoint=setpoint,
                                          y0=0.0, t_final=t_final, dt=dt)
 
-        # Plot the output (y) for each run on the same axes
-        plt.subplot(2, 1, 1)
-        plt.plot(t, y_vals, label=label)
+        # Create a new figure for each run
+        fig, axs = plt.subplots(2, 1, figsize=(8, 6))
 
-        # Plot the control input (u) on the second axes
-        plt.subplot(2, 1, 2)
-        plt.plot(t, u_vals, label=label)
+        # Top subplot: system output
+        axs[0].plot(t, y_vals, label='Output (y)')
+        axs[0].axhline(setpoint, color='r', linestyle='--', label='Setpoint')
+        axs[0].set_ylabel("Output (y)")
+        axs[0].set_title(label)
+        axs[0].legend()
+        axs[0].grid(True)
 
-    # Format the output plot
-    plt.subplot(2, 1, 1)
-    plt.axhline(setpoint, color='r', linestyle='--', label='Setpoint')
-    plt.ylabel("Output (y)")
-    plt.title("Manual PID Tuning Example (First-Order System)")
-    plt.legend()
-    plt.grid(True)
+        # Bottom subplot: controller output
+        axs[1].plot(t, u_vals, label='Control (u)')
+        axs[1].set_xlabel("Time (s)")
+        axs[1].set_ylabel("Control Input (u)")
+        axs[1].legend()
+        axs[1].grid(True)
 
-    # Format the control plot
-    plt.subplot(2, 1, 2)
-    plt.xlabel("Time (s)")
-    plt.ylabel("Control Input (u)")
-    plt.legend()
-    plt.grid(True)
-
-    plt.tight_layout()
-    plt.show()
+        # Adjust layout and display
+        plt.tight_layout()
+        plt.show()
 
 if __name__ == '__main__':
     main()

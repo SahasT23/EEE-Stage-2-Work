@@ -1,245 +1,197 @@
+#!/usr/bin/env python3
 import numpy as np
 import matplotlib.pyplot as plt
 
-# -------------------------------------------------------------------------
-# (1) Plant + Controller Simulation
-# -------------------------------------------------------------------------
-def simulate_plant(Kp, Ki, Kd, a, b, setpoint, 
-                   y0=0.0, t_final=5.0, dt=0.01):
+# ---------------------------------------------------------
+# 1) Open-Loop Step Test
+# ---------------------------------------------------------
+def open_loop_step_test(a, b, U, y0=0.0, t_final=10.0, dt=0.01):
     """
-    Simulates the 1st-order plant:
-       dy/dt = -a*y + b*u
-    under a PID controller:
-       u = P + I + D
-       where e(t) = setpoint - y(t).
-
-    For the "auto-tune" phase, we often set Ki=0, Kd=0 (P-only).
-    
-    Parameters:
-      - Kp, Ki, Kd: Controller gains (float).
-      - a, b: Plant parameters (float).
-      - setpoint: Desired output (float).
-      - y0: Initial output of the plant (float).
-      - t_final: Simulation end time (float).
-      - dt: Timestep (float).
-
-    Returns:
-      t: time array
-      y_list: plant output array
-      u_list: control input array
-      e_list: error array
+    Applies a constant input u(t)=U to the 1st-order plant:
+      dy/dt = -a*y + b*U
+    with initial output y(0)=y0.
+    Returns time t, output y(t).
     """
-
-    # Number of steps
     n_steps = int(t_final / dt)
     t = np.linspace(0, t_final, n_steps)
 
-    # Initialize states
+    y = y0
+    y_vals = []
+    for _ in range(n_steps):
+        dy_dt = -a*y + b*U
+        y = y + dy_dt * dt
+        y_vals.append(y)
+    return t, np.array(y_vals)
+
+# ---------------------------------------------------------
+# 2) Find Inflection Point and Estimate L, T
+# ---------------------------------------------------------
+def find_L_T_from_step(t, y, U):
+    """
+    Given time, output arrays from an open-loop step (and the input step U),
+    approximate the inflection point and compute:
+      L = time-axis intercept of the tangent
+      T = difference between that intercept and tangent crossing of y_ss
+    Also compute process gain K_proc = (y_ss - y0) / U.
+
+    Returns (L, T, K_proc).  If no valid inflection found, returns None, None, None.
+    """
+    y0 = y[0]
+    y_ss = y[-1]
+    if abs(U) < 1e-12:
+        return None, None, None
+    K_proc = (y_ss - y0) / U
+
+    dt = t[1] - t[0]
+    dydt = np.gradient(y, dt)  # numerical derivative
+    idx_inflection = np.argmax(dydt)
+    slope_inf = dydt[idx_inflection]
+
+    # If slope <= 0, can't do S-curve
+    if slope_inf <= 1e-12:
+        return None, None, None
+
+    t_inf = t[idx_inflection]
+    y_inf = y[idx_inflection]
+
+    # Tangent intercept with y=0
+    t_intersect = t_inf - (y_inf / slope_inf)
+    L = t_intersect
+
+    # If L <= 0, fix it (avoid zero or negative 'delay')
+    # We'll clamp it to a small epsilon
+    if L <= 1e-12:
+        L = 1e-5
+
+    # T where tangent hits final value y_ss
+    # y_ss = y_inf + slope_inf*(t_end - t_inf)
+    # => t_end = t_inf + (y_ss - y_inf)/slope_inf
+    t_end = t_inf + (y_ss - y_inf) / slope_inf
+    T = t_end - L
+    if T <= 1e-12:
+        T = 1e-5  # also clamp
+
+    return L, T, K_proc
+
+# ---------------------------------------------------------
+# 3) Ziegler–Nichols from L, T, K_proc
+# ---------------------------------------------------------
+def ziegler_nichols_openloop_pid(L, T, K_proc):
+    """
+    Classic PID from open-loop Z-N approach:
+      Kp = 1.2 * (T / L) / K_proc
+      Ti = 2*L -> Ki = Kp / Ti
+      Td = 0.5*L -> Kd = Kp * Td
+    """
+    Kp = 1.2 * (T / L) / K_proc
+    Ti = 2.0 * L
+    Td = 0.5 * L
+
+    Ki = Kp / Ti
+    Kd = Kp * Td
+    return Kp, Ki, Kd
+
+# ---------------------------------------------------------
+# 4) Simulate Closed-Loop with the Found PID Gains
+# ---------------------------------------------------------
+def simulate_pid(Kp, Ki, Kd, a, b, setpoint, 
+                 y0=0.0, t_final=5.0, dt=0.01):
+    """
+    Closed-loop simulation:
+       dy/dt = -a*y + b*u, 
+    where u = PID(e) = Kp e + Ki ∫e dt + Kd de/dt,
+    e(t)=setpoint - y(t).
+    """
+    n_steps = int(t_final / dt)
+    t = np.linspace(0, t_final, n_steps)
+
     y = y0
     integral = 0.0
     error_prev = setpoint - y
 
     y_list = []
     u_list = []
-    e_list = []
 
-    for i in range(n_steps):
-        # Time loop
-
-        # 1) Compute current error
+    for _ in range(n_steps):
         error = setpoint - y
-
-        # 2) PID terms
         P = Kp * error
-
-        # Integrator (numerical)
         integral += error * dt
         I = Ki * integral
-
-        # Derivative (approx) 
         derivative = (error - error_prev) / dt
         D = Kd * derivative
-
-        # 3) Control signal
         u = P + I + D
 
-        # 4) Update plant: dy/dt = -a*y + b*u
-        dy_dt = -a * y + b * u
+        # Update plant
+        dy_dt = -a*y + b*u
         y = y + dy_dt * dt
 
-        # 5) Save data
         y_list.append(y)
         u_list.append(u)
-        e_list.append(error)
-
-        # 6) For next iteration
         error_prev = error
 
-    return t, np.array(y_list), np.array(u_list), np.array(e_list)
+    return t, np.array(y_list), np.array(u_list)
 
-
-# -------------------------------------------------------------------------
-# (2) Automatic Tuning: Find K_u and T_u
-# -------------------------------------------------------------------------
-def find_ultimate_gain_and_period(a, b, setpoint, 
-                                  y0=0.0, dt=0.01, 
-                                  kp_min=0.0, kp_max=20.0, kp_steps=50):
-    """
-    Sweeps Kp from kp_min to kp_max, performing P-only control on the plant,
-    and checks for sustained oscillations in the final segment of each run.
-
-    This is a naive approach:
-      - For each Kp, run the sim for a fixed time (e.g. 5 seconds).
-      - Check the output's last N samples for oscillations (peak-to-peak amplitude).
-      - If amplitude is large but not diverging, we guess it's near the ultimate gain.
-      - Then measure approximate oscillation period T_u by zero-crossing or peak detection.
-
-    Returns:
-      Ku: The "ultimate" gain that gave the largest stable oscillation amplitude.
-      Tu: The approximate period of that oscillation.
-
-    NOTE: This method is purely illustrative. Real auto-tuners often use
-    relay feedback or more robust detection. 
-    """
-
-    kp_values = np.linspace(kp_min, kp_max, kp_steps)
-    
-    best_kp = None
-    best_amp = 0.0
-    best_period = None
-
-    for Kp in kp_values:
-        # Simulate with P-only control
-        t, y_vals, _, e_vals = simulate_plant(Kp=Kp, Ki=0, Kd=0, 
-                                              a=a, b=b, setpoint=setpoint, 
-                                              y0=y0, t_final=5.0, dt=dt)
-
-        # Let's analyze the last 1 second of simulation for amplitude
-        # We'll just do a rough measure: peak-to-peak amplitude of (y - setpoint)
-        # If it's nearly 0, it's stable (no oscillation). If it's huge, might be diverging.
-        # We'll store the largest stable amplitude.
-
-        last_idx = int(1.0 / dt)  # last 1 second
-        segment = (y_vals - setpoint)[-last_idx:]  # y - setpoint, last part
-        ptp = segment.max() - segment.min()  # peak-to-peak
-
-        # Also let's check if the system is obviously diverging
-        # e.g. if the absolute value is > some threshold 
-        # We'll define a "huge" threshold as 100 for demonstration
-        if np.any(np.abs(segment) > 100):
-            # It's blowing up or saturating, skip
-            continue
-
-        # We'll treat a larger amplitude as "closer to ultimate"
-        if ptp > best_amp:
-            best_amp = ptp
-            best_kp = Kp
-
-            # Approximate period from zero-crossings or naive method
-            # We'll do a simple approach: find time between consecutive sign changes
-            # in the last segment of y - setpoint
-            sign_changes = []
-            seg_time = t[-last_idx:]
-            s_prev = np.sign(segment[0])
-            for i in range(1, len(segment)):
-                s_now = np.sign(segment[i])
-                if s_now != s_prev and s_now != 0:
-                    # sign changed
-                    sign_changes.append(seg_time[i])
-                s_prev = s_now
-
-            # If we have at least 2 sign changes, we can measure half-period roughly
-            # i.e. consecutive sign changes ~ half wave in a sinusoid
-            if len(sign_changes) >= 2:
-                # measure average delta
-                deltas = []
-                for i in range(1, len(sign_changes)):
-                    deltas.append(sign_changes[i] - sign_changes[i-1])
-                half_period_est = np.mean(deltas) if len(deltas) > 0 else 0
-                # full period ~ 2 * half_period_est
-                best_period = 2 * half_period_est
-            else:
-                best_period = None
-
-    # Return the best result
-    return best_kp, best_period
-
-
-# -------------------------------------------------------------------------
-# (3) Ziegler–Nichols Formulas
-# -------------------------------------------------------------------------
-def ziegler_nichols_classic_pid(Ku, Tu):
-    """
-    Ziegler–Nichols Classic PID Tuning rule:
-      Kp = 0.6 Ku
-      Ki = 2*Kp / Tu  (i.e. Ti = 0.5 Tu, so Ki = Kp / Ti)
-      Kd = 0.125 Kp Tu
-    """
-    if Ku is None or Tu is None or Tu <= 0:
-        return (0, 0, 0)  # fallback
-
-    Kp = 0.6 * Ku
-    Ki = (2.0 * Kp) / Tu
-    Kd = 0.125 * Kp * Tu
-    return (Kp, Ki, Kd)
-
-
-# -------------------------------------------------------------------------
+# ---------------------------------------------------------
 # MAIN DEMO
-# -------------------------------------------------------------------------
+# ---------------------------------------------------------
 def main():
-    # Plant parameters for: dy/dt = -a*y + b*u
+    """
+    1) Perform open-loop step test => get 'S' shaped response.
+    2) Estimate L, T, and K_proc using the inflection point approach.
+    3) Compute Z-N Classic PID gains, avoiding infinite or NaN by clamping small L.
+    4) Simulate closed-loop with those PID gains.
+    """
+    # Plant: dy/dt = -a*y + b*u
     a = 1.0
     b = 2.0
 
-    # Setpoint for the plant
-    setpoint = 5.0
+    # Step input
+    U_step = 1.0
 
-    # 1) Find ultimate gain (Ku) and period (Tu) by sweeping Kp
-    Ku, Tu = find_ultimate_gain_and_period(a=a, b=b, setpoint=setpoint)
-    print(f"Estimated Ku (Ultimate Gain) = {Ku:.3f}")
-    print(f"Estimated Tu (Ultimate Period) = {Tu:.3f}")
+    # (A) Open-loop step
+    t_ol, y_ol = open_loop_step_test(a, b, U=U_step, y0=0.0, t_final=10.0, dt=0.01)
 
-    if Ku is None or Tu is None:
-        print("Could not find sustained oscillations with given search range.")
-        print("Try increasing kp_max or adjusting approach.")
+    # (B) Estimate L, T, K_proc
+    L, T, K_proc = find_L_T_from_step(t_ol, y_ol, U=U_step)
+    if (L is None) or (T is None) or (K_proc is None):
+        print("Failed to get valid (L,T,K_proc). The system might be purely first-order with no delay.")
         return
 
-    # 2) Use Ziegler–Nichols formula for "Classic PID"
-    Kp, Ki, Kd = ziegler_nichols_classic_pid(Ku, Tu)
-    print(f"Ziegler–Nichols PID Gains:\n  Kp={Kp:.3f}, Ki={Ki:.3f}, Kd={Kd:.3f}")
+    print(f"Open-Loop Step:\n  L={L:.6f}, T={T:.6f}, K_proc={K_proc:.6f}")
 
-    # 3) Simulate with these PID gains
-    t, y_vals, u_vals, e_vals = simulate_plant(Kp=Kp, Ki=Ki, Kd=Kd, 
-                                               a=a, b=b, setpoint=setpoint, 
-                                               y0=0.0, t_final=5.0, dt=0.01)
-    # 4) Plot the results
-    plt.figure(figsize=(10,5))
+    # (C) Compute Z-N Gains
+    Kp, Ki, Kd = ziegler_nichols_openloop_pid(L, T, K_proc)
+    print(f"Z-N Gains:\n  Kp={Kp}, Ki={Ki}, Kd={Kd}")
 
-    # Output vs. setpoint
+    # (D) Closed-loop simulation
+    setpoint = 5.0
+    t_cl, y_cl, u_cl = simulate_pid(Kp, Ki, Kd, a, b, setpoint,
+                                   y0=0.0, t_final=5.0, dt=0.01)
+
+    # (E) Plot
+    plt.figure(figsize=(10,6))
+
+    # top: open-loop
     plt.subplot(2,1,1)
-    plt.plot(t, y_vals, label='Plant Output (y)')
-    plt.axhline(setpoint, color='r', linestyle='--', label='Setpoint')
-    plt.title('PID Control with Auto-Tuned Gains (Ziegler-Nichols)')
-    plt.xlabel('Time (s)')
-    plt.ylabel('Output (y)')
-    plt.legend()
+    plt.plot(t_ol, y_ol, 'b-', label='Open-Loop Step')
+    plt.title("Open-Loop Step Test")
+    plt.xlabel("Time (s)")
+    plt.ylabel("Output (y)")
     plt.grid(True)
+    plt.legend()
 
-    # Control input
+    # bottom: closed-loop
     plt.subplot(2,1,2)
-    plt.plot(t, u_vals, 'g-', label='Controller Output (u)')
-    plt.xlabel('Time (s)')
-    plt.ylabel('Control Signal')
-    plt.legend()
+    plt.plot(t_cl, y_cl, 'r-', label='Closed-Loop (Z-N PID)')
+    plt.axhline(setpoint, color='k', linestyle='--', label='Setpoint')
+    plt.title(f"Closed-Loop: Kp={Kp:.2f}, Ki={Ki:.2f}, Kd={Kd:.2f}")
+    plt.xlabel("Time (s)")
+    plt.ylabel("Output (y)")
     plt.grid(True)
+    plt.legend()
 
     plt.tight_layout()
     plt.show()
 
-
-# -------------------------------------------------------------------------
-# Run the demo
-# -------------------------------------------------------------------------
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
