@@ -1,8 +1,9 @@
 ## PID Notes and Control System Demo in Python
 This repository contains all of the demonstrations of the different tuning approaches: 
-1. Using Manual PID tuning,
-2. 2. Ziegler-Nichols Method of tuning.
+1. Using Manual PID tuning
+2. Ziegler-Nichols Method of tuning.
 3. Reinforcement Learning Method of PID tuning.
+4. P, PI, PID methods, showing the progression and improvements at each stage
 
 ![Screenshot from 2025-02-11 10-25-36](https://github.com/user-attachments/assets/0de2d129-6c87-4c35-b20c-9b7167c62c84)
 ![Screenshot from 2025-02-11 10-25-51](https://github.com/user-attachments/assets/550be6a6-a3f0-49b9-9b31-6e48c97c9473)
