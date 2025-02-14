@@ -1,9 +1,95 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36" version="26.0.3">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36" version="26.0.13">
   <diagram name="Page-1" id="axYgsjCO0ybdbPVIef5I">
-    <mxGraphModel>
+    <mxGraphModel dx="1633" dy="744" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="vKooB6wtq8IJvU8bctCZ-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="vKooB6wtq8IJvU8bctCZ-1" target="vKooB6wtq8IJvU8bctCZ-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vKooB6wtq8IJvU8bctCZ-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="vKooB6wtq8IJvU8bctCZ-1" target="vKooB6wtq8IJvU8bctCZ-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vKooB6wtq8IJvU8bctCZ-1" value="PIC chip" style="rounded=1;whiteSpace=wrap;html=1;fillColor=light-dark(#E1D5E7,var(--ge-dark-color, #121212));" vertex="1" parent="1">
+          <mxGeometry x="50" y="160" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="vKooB6wtq8IJvU8bctCZ-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="vKooB6wtq8IJvU8bctCZ-2" target="vKooB6wtq8IJvU8bctCZ-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vKooB6wtq8IJvU8bctCZ-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="vKooB6wtq8IJvU8bctCZ-2" target="vKooB6wtq8IJvU8bctCZ-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vKooB6wtq8IJvU8bctCZ-2" value="Sensor Subsystem" style="rounded=1;whiteSpace=wrap;html=1;fillColor=light-dark(#E1D5E7,var(--ge-dark-color, #121212));" vertex="1" parent="1">
+          <mxGeometry x="120" y="280" width="80" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="vKooB6wtq8IJvU8bctCZ-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="vKooB6wtq8IJvU8bctCZ-3" target="vKooB6wtq8IJvU8bctCZ-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vKooB6wtq8IJvU8bctCZ-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="vKooB6wtq8IJvU8bctCZ-3" target="vKooB6wtq8IJvU8bctCZ-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vKooB6wtq8IJvU8bctCZ-3" value="Motor + Steering system" style="rounded=1;whiteSpace=wrap;html=1;fillColor=light-dark(#E1D5E7,var(--ge-dark-color, #121212));" vertex="1" parent="1">
+          <mxGeometry x="120" y="30" width="80" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="vKooB6wtq8IJvU8bctCZ-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="vKooB6wtq8IJvU8bctCZ-4" target="vKooB6wtq8IJvU8bctCZ-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vKooB6wtq8IJvU8bctCZ-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="vKooB6wtq8IJvU8bctCZ-4" target="vKooB6wtq8IJvU8bctCZ-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vKooB6wtq8IJvU8bctCZ-4" value="Motor&amp;nbsp; &amp;nbsp;Control" style="ellipse;whiteSpace=wrap;html=1;fillColor=light-dark(#E6FFCC,var(--ge-dark-color, #121212));" vertex="1" parent="1">
+          <mxGeometry x="280" y="80" width="80" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vKooB6wtq8IJvU8bctCZ-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="vKooB6wtq8IJvU8bctCZ-5" target="vKooB6wtq8IJvU8bctCZ-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vKooB6wtq8IJvU8bctCZ-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="vKooB6wtq8IJvU8bctCZ-5" target="vKooB6wtq8IJvU8bctCZ-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vKooB6wtq8IJvU8bctCZ-5" value="Steering Control" style="ellipse;whiteSpace=wrap;html=1;fillColor=light-dark(#E6FFCC,var(--ge-dark-color, #121212));" vertex="1" parent="1">
+          <mxGeometry x="280" y="220" width="80" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vKooB6wtq8IJvU8bctCZ-17" value="&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;This is an overall, high level view of the system&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;Need to add:&lt;div&gt;1. Interrupts to the PIC chip to make alterations to power and steering&lt;/div&gt;&lt;div&gt;2.&amp;nbsp;&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="440" y="40" width="160" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="vKooB6wtq8IJvU8bctCZ-20" value="Steering Control" style="ellipse;whiteSpace=wrap;html=1;fillColor=light-dark(#E6FFCC,var(--ge-dark-color, #121212));" vertex="1" parent="1">
+          <mxGeometry x="240" y="520" width="80" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vKooB6wtq8IJvU8bctCZ-21" value="&amp;nbsp; &amp;nbsp;Drive&amp;nbsp; &amp;nbsp; Control" style="ellipse;whiteSpace=wrap;html=1;fillColor=light-dark(#E6FFCC,var(--ge-dark-color, #121212));" vertex="1" parent="1">
+          <mxGeometry x="520" y="520" width="80" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vKooB6wtq8IJvU8bctCZ-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="vKooB6wtq8IJvU8bctCZ-22" target="vKooB6wtq8IJvU8bctCZ-20">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vKooB6wtq8IJvU8bctCZ-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="vKooB6wtq8IJvU8bctCZ-22" target="vKooB6wtq8IJvU8bctCZ-21">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="vKooB6wtq8IJvU8bctCZ-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="vKooB6wtq8IJvU8bctCZ-22">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="320" y="400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="vKooB6wtq8IJvU8bctCZ-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="506" y="400" as="targetPoint" />
+            <mxPoint x="460" y="470" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="vKooB6wtq8IJvU8bctCZ-22" value="Steering Control" style="ellipse;whiteSpace=wrap;html=1;fillColor=light-dark(#E6FFCC,var(--ge-dark-color, #121212));" vertex="1" parent="1">
+          <mxGeometry x="374" y="440" width="80" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vKooB6wtq8IJvU8bctCZ-25" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" target="vKooB6wtq8IJvU8bctCZ-21">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="320" y="550" as="sourcePoint" />
+            <mxPoint x="370" y="500" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="vKooB6wtq8IJvU8bctCZ-28" value="Sensor 1" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="295" y="350" width="50" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="vKooB6wtq8IJvU8bctCZ-31" value="Sensor 2" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="480" y="350" width="50" height="50" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
